@@ -23,6 +23,7 @@ namespace MKBusService.Models
         [RegularExpression(@"((\d{3}-)|(\(\d{3}\) ))\d{3}-\d{4}")]
         public string HomePhone { get; set; }
         [Required]
+        [RegularExpression(@"((\d{3}-)|(\(\d{3}\) ))\d{3}-\d{4}")]
         public string WorkPhone { get; set; }
         [Required]
         public string Street { get; set; }
@@ -55,8 +56,6 @@ namespace MKBusService.Models
             WorkPhone = Phoneverification(WorkPhone);
             ProvinceCode = ProvinceCode.ToUpper();
             PostalCode = PostalCode.ToUpper();
-
-
             if (PostalCode.Length == 6)
             {
                 PostalCode = PostalCode.Insert(3, " ");

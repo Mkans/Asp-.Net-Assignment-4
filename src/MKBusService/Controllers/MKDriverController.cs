@@ -83,15 +83,23 @@ namespace MKBusService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DriverId,City,DateHired,FirstName,FullName,HomePhone,LastName,PostalCode,ProvinceCode,Street,WorkPhone")] Driver driver)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(driver);
-                await _context.SaveChangesAsync();
-                TempData["message"] = $"Driver " + driver.LastName + " created";
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    _context.Add(driver);
+                    await _context.SaveChangesAsync();
+                    TempData["message"] = $"Driver " + driver.LastName + " created";
+                    return RedirectToAction("Index");
+                }
+                ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", driver.ProvinceCode);
+                return View(driver);
             }
-            ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", driver.ProvinceCode);
-            return View(driver);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Cannot create a new driver" + ex.GetBaseException().Message);
+                return RedirectToAction(actionName: "Create", controllerName: "MKDriver");
+            }
         }
 
         // GET: MKDriver/Edit/5
@@ -118,37 +126,52 @@ namespace MKBusService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DriverId,City,DateHired,FirstName,FullName,HomePhone,LastName,PostalCode,ProvinceCode,Street,WorkPhone")] Driver driver)
         {
-            if (id != driver.DriverId)
+            try
             {
-                return NotFound();
-            }
+                if (id != driver.DriverId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(driver);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DriverExists(driver.DriverId))
+                    try
                     {
-                        return NotFound();
+                        driver.FullName = driver.LastName + ", " + driver.FirstName;
+                        driver.HomePhone = driver.HomePhone.Substring(0, 3) + "-" + driver.HomePhone.Substring(3, 3) + "-" + driver.HomePhone.Substring(6);
+                        if (!String.IsNullOrEmpty(driver.WorkPhone))
+                        {
+                            driver.WorkPhone = driver.WorkPhone.Substring(0, 3) + "-" + driver.WorkPhone.Substring(3, 3) + "-" + driver.WorkPhone.Substring(6);
+                        }
+                        _context.Update(driver);
+                        TempData["message"] = driver.FullName + "Record Updated Successfully !!";
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!DriverExists(driver.DriverId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", $"error  {ex.GetBaseException().Message}");
+                    }
+                    return RedirectToAction("Index");
                 }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"error  {ex.GetBaseException().Message}");
-                }
-                return RedirectToAction("Index");
+                ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", driver.ProvinceCode);
+                return View(driver);
             }
-            ViewData["ProvinceCode"] = new SelectList(_context.Province, "ProvinceCode", "ProvinceCode", driver.ProvinceCode);
-            return View(driver);
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error ! Cannot Edit the driver" + ex.GetBaseException().Message);
+                return RedirectToAction(actionName: "Edit", controllerName: "MKDriver");
+            }
         }
 
         // GET: MKDriver/Delete/5
@@ -178,15 +201,22 @@ namespace MKBusService.Controllers
                 var driver = await _context.Driver.SingleOrDefaultAsync(m => m.DriverId == id);
                 _context.Driver.Remove(driver);
                 await _context.SaveChangesAsync();
+                TempData["message"] = driver.FullName + " Record Deleted Successfully !!";
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                return NotFound();
+                TempData["message"] = ex.GetBaseException().Message;
+                return RedirectToAction(actionName: "Delete", controllerName: "MKDriver");
             }
-            
-            return RedirectToAction("Index");
         }
-
+        public JsonResult DateHiredNotInFuture(DateTime orderDate)
+        {
+            if (orderDate <= DateTime.Now)
+                return Json(true);
+            else
+                return Json("Date Hired cannot be in the future");
+        }
         private bool DriverExists(int id)
         {
             return _context.Driver.Any(e => e.DriverId == id);
