@@ -1,0 +1,25 @@
+@model IEnumerable<MKBusService.Models.RouteSchedule>
+
+@{
+    ViewData["Title"] = "RouteStopSchedule";
+}
+<h2>@ViewData["Title"]</h2>
+<h2>Mon-Fri</h2>
+@foreach (var item in Model)
+{
+    @if (item.IsWeekDay)
+    {
+        <li>@item.StartTime</li>
+        <br>
+    }
+}
+<br />
+<h2>Sat-Sun Holidays</h2>
+@foreach (var item in Model)
+{
+    @if (!item.IsWeekDay)
+    {
+        <li>@item.StartTime</li>
+            <br> 
+    }
+}

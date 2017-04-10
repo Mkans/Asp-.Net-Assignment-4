@@ -1,0 +1,48 @@
+@model IEnumerable<MKBusService.Models.RouteSchedule>
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = $"Stop : {Context.Session.GetString("busRouteCode")} - " +
+        $"{ Context.Session.GetString("routeName")}";
+}
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Comments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsWeekDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsWeekDay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RouteScheduleId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RouteScheduleId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RouteScheduleId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

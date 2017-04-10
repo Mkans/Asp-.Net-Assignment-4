@@ -1,0 +1,15 @@
+@model IEnumerable<MKBusService.Models.RouteStop>
+@using Microsoft.AspNetCore.Http;
+@{
+    ViewData["Title"] = $"Routes using the stop: {Context.Request.Query["busStopNumber"]} - " +
+        $"{Context.Request.Query["location"]}";
+}
+<h2>@ViewData["Title"]</h2>
+<form asp-controller="MKRouteSchedule" asp-action="RouteStopSchedule" method="post">
+@foreach (var item in Model)
+{
+    <input type="radio" name="RouteStopId" value="@item.RouteStopId" id="@item.RouteStopId" asp-for="@item.RouteStopId"/><text> &nbsp; </text>
+    <label for="@item.RouteStopId">@item.BusRouteCodeNavigation.RouteName</label><br />
+}
+    <input type="submit" value="Submit"class="btn btn-default" />
+</form>

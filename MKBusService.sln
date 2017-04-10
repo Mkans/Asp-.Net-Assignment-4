@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EE1C175E-5DF7-49C2-A68A-D6C21844E833}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2B4D0D10-A9F6-40FC-ACC1-6B9DC53CF7EB}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MKBusService", "src\MKBusService\MKBusService.xproj", "{08F8750E-1583-4856-86C0-D3BF248BEC41}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08F8750E-1583-4856-86C0-D3BF248BEC41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08F8750E-1583-4856-86C0-D3BF248BEC41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08F8750E-1583-4856-86C0-D3BF248BEC41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08F8750E-1583-4856-86C0-D3BF248BEC41}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{08F8750E-1583-4856-86C0-D3BF248BEC41} = {EE1C175E-5DF7-49C2-A68A-D6C21844E833}
+	EndGlobalSection
+EndGlobal
